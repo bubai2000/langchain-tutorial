@@ -1,23 +1,14 @@
-from langchain.llms.vertexai import VertexAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
+import services.langchain_service as ls
+import streamlit as st
 
+st.title("AI Code generator")
 
-def code(language, problem):
-    llm = VertexAI(model_name="code-bison", max_output_tokens=1000)
+language = st.sidebar.selectbox(
+    "Please select your language!", ("Python", "JavaScript", "Rust", "Dart"))
 
-    prompt_template = PromptTemplate(
-        input_variables=['language', 'problem'], template="Write me a function in {language} to {problem}"
-    )
+problem = st.sidebar.text_area(
+    "What is your problem statement?", max_chars=100)
 
-    chain = LLMChain(llm=llm, prompt=prompt_template)
-
-    response = chain({"language": language, "problem": problem})
-    return response.get("text", "ERROR Occured!")
-
-
-if __name__ == "__main__":
-    with open("Output.txt", "w") as file:
-        file.write(code(language="Python",
-                   problem="Access secret value from Google Cloud Platform Secret Manager"))
-        file.close()
+if (language and problem):
+    response = ls.code(language=language, problem=problem)
+    st.text(response)
