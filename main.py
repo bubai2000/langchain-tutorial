@@ -1,5 +1,13 @@
 import services.langchain_service as ls
 import streamlit as st
+import json
+import os
+
+with open("gcp.json", "w") as file:
+    json.dump(st.secrets["gcp_service_account"], file, default=dict)
+    file.close()
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gcp.json"
 
 st.title("AI Code generator")
 

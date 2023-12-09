@@ -1,5 +1,7 @@
 langchain_env
 
-credentials
+gcp.json
 
 .env
+
+.streamlit/
