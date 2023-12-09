@@ -1,0 +1,4 @@
+langchain
+openai
+streamlint
+python-dotenv
