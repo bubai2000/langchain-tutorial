@@ -20,4 +20,4 @@ problem = st.sidebar.text_area(
 
 if (language and problem):
     response = ls.code(language=language, problem=problem)
-    st.text(response)
+    st.code(response, language=language)
