@@ -1,7 +1,8 @@
-import services.langchain_service as ls
+import services.vertex_chat_service as vcs
 import streamlit as st
 import json
 import os
+import pandas as pd
 
 with open("gcp.json", "w") as file:
     json.dump(st.secrets["gcp_service_account"], file, default=dict)
@@ -9,15 +10,16 @@ with open("gcp.json", "w") as file:
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gcp.json"
 
-st.title("AI Code generator")
+st.title("CSV Data Analyzer")
 
-language = st.sidebar.selectbox(
-    "Please select your language!", ("C", "Python", "Java", "C++", "C#", "JavaScript", "PHP", "VB.NET", "Assembly Language", "Classic Visual Basic", "Fortran", "R", "Ruby", "Go", "Swift", "MATLAB", "Rust", "Kotlin", "Objective-C", "Scala", "Perl", "Prolog", "COBOL", "Delphi/Object Pascal", "Lua", "Haskell", "Erlang", "Groovy", "Julia", "Visual Basic", "Ada", "Eiffel", "F#", "Dart", "CLIPS", "OCaml", "Nim", "Elm", "Scratch", "TypeScript", "VHDL", "Verilog", "Pike", "Swift (Android)", "Kotlin (JVM)", "Ceylon", "Crystal", "Ballerina", "CMake"
-                                     ))
+file = st.file_uploader("Choose CSV a file")
 
-problem = st.sidebar.text_area(
-    "What is your problem statement?", max_chars=100)
-
-if (language and problem):
-    response = ls.code(language=language, problem=problem)
-    st.code(response, language=language)
+if file is not None:
+    try:
+        df = pd.read_csv(file)
+        st.dataframe(df)
+        query = st.text_area("Enter your query", max_chars=100)
+        result = vcs.run(query=query, dataframe=df)
+        st.text(result)
+    except Exception as e:
+        st.text(f"Error occured! {e}")

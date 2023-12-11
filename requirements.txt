@@ -3,4 +3,5 @@ openai
 streamlit
 python-dotenv
 google-cloud-aiplatform
-google-auth
+langchain_experimental
+tabulate
